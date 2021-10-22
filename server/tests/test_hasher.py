@@ -1,4 +1,4 @@
-from ..model.hasher import Hasher
+from ..utils.hasher import Hasher
 
 
 class TestHasher:

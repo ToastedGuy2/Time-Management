@@ -1,30 +1,38 @@
 from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
 from flask.json import jsonify
-from .model.hasher import Hasher
+from ftfy import fix_encoding, fix_text
+# FLASK
+from .utils.hasher import Hasher
+from .utils.validations.user.user_validator import UserValidator
+from .shared.database import db
+from .models.User import User
+# from .utils.user_model import User
+# PYTHON SHELL
+# from model.hasher import Hasher
+# from model.validations.user.user_validator import UserValidator
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/pomodoro'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.Text, nullable=False)
-
-    def __repr__(self):
-        return '<User %r>' % self.username
+db.init_app(app)
 
 
 @app.route("/api/users", methods=["POST"])
 def sign_up():
     model = request.json
+    v = UserValidator()
+    if not v.is_user_valid(model):
+        return {'message': "invalid data", 'errors': v.get_errors()}, 400
+    if User.query.filter_by(username=model['username']).first() is not None:
+        return {'message': "invalid data", 'errors': {
+            'username': 'username already exists'}}, 400
     password = model["password"]
     password = Hasher().hash_password(password)
-    username = model["username"]
+    username = str.lower(fix_text(model["username"]))
     user = User(username=username, password=password)
     db.session.add(user)
     db.session.commit()
-    userDictionary = {'username': username, 'password': password}
-    return jsonify(userDictionary)
+    user_dict = user.asdict()
+    user_dict['url'] = f"http://127.0.0.1:5000/api/users/{user_dict['id']}"
+    user_dict['password'] = model['password']
+    return jsonify(user_dict)
