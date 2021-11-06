@@ -2,10 +2,9 @@ from passlib.context import CryptContext
 
 
 class Hasher:
-    myctx = CryptContext(schemes=["sha512_crypt"], deprecated="auto")
 
     def __init__(self) -> None:
-        pass
+        self.myctx = CryptContext(schemes=["sha512_crypt"], deprecated="auto")
 
     def hash_password(self, password):
         return self.myctx.hash(password)

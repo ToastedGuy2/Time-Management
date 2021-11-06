@@ -1,4 +1,3 @@
-from cerberus import Validator
 from .my_validator import MyValidator
 
 
@@ -10,7 +9,6 @@ class UserValidator:
             'username': {
                 "type": "string",
                 'empty': False,
-                "check_with": "is_username_already_taken",
             },
             'password': {
                 "type": "string",
@@ -22,9 +20,12 @@ class UserValidator:
     def is_user_valid(self, user):
         return self.v.validate(user, self.schema)
 
-    def get_errors(self):
-        errors_dict = self.v.errors
+    def get_cleaner_error_messages(self, errors_dict):
+        clean_dict = {}
         for key in errors_dict:
             error_message = errors_dict[key][0]
-            errors_dict[key] = error_message
-        return errors_dict
+            clean_dict[key] = error_message
+        return clean_dict
+
+    def get_errors(self):
+        return self.get_cleaner_error_messages(self.v.errors)
