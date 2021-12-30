@@ -1,9 +1,7 @@
 from ..utils.hasher import Hasher
 from password_generator import PasswordGenerator
-import unittest
-
-
-class TestHasher(unittest.TestCase):
+from unittest import TestCase
+class TestHasher(TestCase):
 
     def setUp(self):
         self.hasher = Hasher()
@@ -27,6 +25,3 @@ class TestHasher(unittest.TestCase):
             self.assertIs(self.hasher.verify_password(
                 original_psw, hash_psw), True)
 
-
-if __name__ == '__main__':
-    unittest.main()

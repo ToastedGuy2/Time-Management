@@ -1,12 +1,12 @@
 from ..utils.validations.user.user_validator import UserValidator
-import unittest
+from unittest import TestCase
 from random_username.generate import generate_username
 from password_generator import PasswordGenerator
 
 from unittest.mock import MagicMock
 
 
-class TestUserValidator(unittest.TestCase):
+class TestUserValidator(TestCase):
     def setUp(self) -> None:
         self.uv = UserValidator()
 

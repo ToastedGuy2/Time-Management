@@ -1,10 +1,8 @@
 from ..utils.validations.user.user_validations import UserValidations
 from password_generator import PasswordGenerator
 from random import randint
-import unittest
-
-
-class TestUserValidations(unittest.TestCase):
+from unittest import TestCase
+class TestUserValidations(TestCase):
     def setUp(self):
         self.v = UserValidations()
         self.pwg = PasswordGenerator()

@@ -1,10 +1,10 @@
 from ..repositories.user_repository import UserRepository
 from ..models.User import User
-import unittest
+from unittest import TestCase
 from unittest.mock import MagicMock
 
 
-class TestUserRepository(unittest.TestCase):
+class TestUserRepository(TestCase):
 
     def test_user_is_found(self):
         u = UserRepository()
