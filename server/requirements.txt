@@ -24,6 +24,8 @@ pycodestyle==2.8.0
 pyparsing==2.4.7
 pytest==6.2.5
 pytest-mock==3.6.1
+random-password-generator==2.2.0
+random-username==1.0.2
 requests==2.26.0
 SQLAlchemy==1.4.25
 toml==0.10.2
