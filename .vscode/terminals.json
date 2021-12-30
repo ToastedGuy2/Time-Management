@@ -1,7 +1,6 @@
 {
     "autorun": true,
     "autokill": true,
-    "recycle": true,
     "terminals": [{
             "icon": "eye",
             "name": "Server",
