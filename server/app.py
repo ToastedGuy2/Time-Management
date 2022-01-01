@@ -16,7 +16,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhos
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
-
+# TODO: TRY CATCH -> Document is Missing
 @app.route("/api/users", methods=["POST"])
 def sign_up():
     model = request.json

@@ -17,8 +17,8 @@ class UserValidator:
             },
         }
 
-    def is_user_valid(self, user):
-        return self.v.validate(user, self.schema)
+    def is_user_valid(self, user = {}):
+        return self.v.validate(user if user else {}, self.schema)
 
     def get_cleaner_error_messages(self, errors_dict):
         clean_dict = {}

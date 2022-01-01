@@ -1,27 +1,27 @@
 from ..utils.hasher import Hasher
 from password_generator import PasswordGenerator
-from unittest import TestCase
-class TestHasher(TestCase):
+from pytest import fixture
+class TestHasher():
 
-    def setUp(self):
-        self.hasher = Hasher()
-        # Arrange
+    @fixture
+    def hasher(self):
+        return Hasher()
+    @fixture
+    def rng_passwords(self):
         pwo = PasswordGenerator()
-        self.rng_passwords = [pwo.generate() for n in range(25)]
-        # Act
-        self.hash_passwords = [self.hasher.hash_password(
-            password) for password in self.rng_passwords]
+        return [pwo.generate() for n in range(25)]
+    @fixture
+    def hashed_passwords(self,hasher,rng_passwords):
+        return [hasher.hash_password(
+            password) for password in rng_passwords]
 
-    def test_hash_password_length_is_120(self):
-        # Assert
-        for psw in self.hash_passwords:
-            self.assertEqual(len(psw), 120)
+    def test_hash_password_length_is_120(self,hashed_passwords):
+        for psw in hashed_passwords:
+           assert len(psw) is 120
 
-    def test_verify_password_is_correct(self):
-        # Assert
+    def test_verify_password_is_correct(self,hasher,rng_passwords,hashed_passwords):
         for i in range(25):
-            original_psw = self.rng_passwords[i]
-            hash_psw = self.hash_passwords[i]
-            self.assertIs(self.hasher.verify_password(
-                original_psw, hash_psw), True)
-
+            original_psw = rng_passwords[i]
+            hash_psw = hashed_passwords[i]
+            assert hasher.verify_password(
+                original_psw, hash_psw) is True
