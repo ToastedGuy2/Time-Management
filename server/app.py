@@ -6,13 +6,10 @@ from .utils.validations.user.user_validator import UserValidator
 from .shared.database import db
 from .models.User import User
 from .repositories.user_repository import UserRepository
-# from .utils.user_model import User
-# PYTHON SHELL
-# from model.hasher import Hasher
-# from model.validations.user.user_validator import UserValidator
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/pomodoro'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:_Byakuran4@localhost/pomodoro'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
