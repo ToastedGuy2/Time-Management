@@ -1,7 +1,6 @@
 from ..shared.database import db
 from ..models.User import User
 
-
 class UserRepository:
 
     def get_by_id(self, id):

@@ -1,4 +1,6 @@
 from ..shared.database import db
+# PYTHON SHELL
+# from shared.database import db
 
 
 class User(db.Model):

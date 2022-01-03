@@ -6,10 +6,12 @@ from .utils.validations.user.user_validator import UserValidator
 from .shared.database import db
 from .models.User import User
 from .repositories.user_repository import UserRepository
-
+# PYTHON SHELL
+# from shared.database import db
+# from models.User import User
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:_Byakuran4@localhost/pomodoro'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://toastedguy2:_Byakuran4@localhost/pomodoro'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
