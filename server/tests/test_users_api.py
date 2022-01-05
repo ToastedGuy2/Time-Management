@@ -51,18 +51,17 @@ class TestUsersApi():
         response = client.post('/api/users',json=input)
         # Assert
         assert response.status_code == 201
-    # @patch('..app.UserValidator')
+    @patch('server.app.UserValidator')
     # def test_post_method_to_see_if_it_returns_500_internal_error_in_case_of_an_exception(self,client:FlaskClient,mock_user_validator):
-    def test_post_method_to_see_if_it_returns_500_internal_error_in_case_of_an_exception(self,client:FlaskClient):
+    def test_post_method_to_see_if_it_returns_500_internal_error_in_case_of_an_exception(self,mock_user_validator:MagicMock,client:FlaskClient):
         # Arrange
-        with patch('server.app.UserValidator') as uv:
-            input = {'password':'internal','username':'error'}
-            uv.side_effect = ValueError('testing')
-            # Act
-            response = client.post('/api/users',json=input)
-            # Assert
-            uv.assert_called_once()
-            assert response.status_code == 500
+        input = {'password':'internal','username':'error'}
+        mock_user_validator.side_effect = ValueError('testing')
+        # Act
+        response = client.post('/api/users',json=input)
+        # Assert
+        mock_user_validator.assert_called_once()
+        assert response.status_code == 500
         
         
         
