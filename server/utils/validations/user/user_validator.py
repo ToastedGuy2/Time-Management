@@ -18,6 +18,8 @@ class UserValidator:
         }
 
     def is_user_valid(self, user = {}):
+        if user is None:
+            raise ValueError('Please provide a user dictionary')
         return self.v.validate(user if user else {}, self.schema)
 
     def get_cleaner_error_messages(self, errors_dict):

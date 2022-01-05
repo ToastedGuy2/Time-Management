@@ -36,5 +36,7 @@ def sign_up():
         user_dict['url'] = f"http://127.0.0.1:5000/api/users/{user_dict['id']}"
         user_dict['password'] = model['password']
         return user_dict,201
+    except ValueError as e:
+        return {'message':"Please provide a json object"},400
     except Exception as e:
         return {'message':"Something went wrong while processing your request"},500

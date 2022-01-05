@@ -12,6 +12,14 @@ class TestUsersApi():
             db.drop_all()
             db.create_all()
             yield c
+    def test_post_method_with_None_data_so_it_returns_400_bad_request(self,client:FlaskClient):
+        # Arrange
+        input = None
+        # Act
+        response = client.post('/api/users',json=input)
+        body = loads(response.data.decode('utf-8')) 
+        # Assert
+        assert response.status_code == 400 and body == {'message':"Please provide a json object"}
     def test_post_method_with_empty_dict_so_it_returns_400_bad_request(self,client:FlaskClient):
         # Arrange
         input = {}
@@ -62,6 +70,17 @@ class TestUsersApi():
         # Assert
         mock_user_validator.assert_called_once()
         assert response.status_code == 500
-        
+
+
+    @patch('server.app.UserValidator')
+    def test_first_mocks(self,mock_user_validator:MagicMock,client_fixture:FlaskClient):
+        # Arrange
+        input = {'password':'internal','username':'error'}
+        mock_user_validator.side_effect = ValueError('testing')
+        # Act
+        response = client_fixture.post('/api/users',json=input)
+        # Assert
+        mock_user_validator.assert_called_once()
+        assert response.status_code == 500
         
         
