@@ -5,7 +5,7 @@ class UserValidator:
 
     def __init__(self):
         self.v = MyValidator(require_all=True)
-        self.schema = {
+        self.user_to_create_schema = {
             'username': {
                 "type": "string",
                 'empty': False,
@@ -16,11 +16,26 @@ class UserValidator:
                 "check_with": "strong_password",
             },
         }
+        self.user_to_login_schema = {
+            'username': {
+                "type": "string",
+                'empty': False,
+            },
+            'password': {
+                "type": "string",
+                'empty': False,
+            },
+        }
 
-    def is_user_valid(self, user = {}):
+    def is_user_to_create_valid(self, user = {}):
         if user is None:
             raise ValueError('Please provide a user dictionary')
-        return self.v.validate(user if user else {}, self.schema)
+        return self.v.validate(user, self.user_to_create_schema)
+    def is_user_to_login_valid(self,user={}):
+        if user is None:
+            raise ValueError('Please provide a user dictionary')
+        return self.v.validate(user, self.user_to_login_schema)
+                   
 
     def get_cleaner_error_messages(self, errors_dict):
         clean_dict = {}

@@ -31,7 +31,7 @@ class TestUserValidator():
                 'username': generate_username(1)[0],
                 'password': pwg.generate()
             }
-            assert uv.is_user_valid(user) is True
+            assert uv.is_user_to_create_valid(user) is True
 
     def test_user_is_not_valid(self,uv:UserValidator):
         pwg = PasswordGenerator()
@@ -41,7 +41,7 @@ class TestUserValidator():
                 'username': generate_username(5),
                 'password': pwg.generate()
             }
-            assert uv.is_user_valid(user) is False
+            assert uv.is_user_to_create_valid(user) is False
 
     def test_get_an_empty_error_message_dictionary(self,uv:UserValidator):
         error_message = uv.get_errors()
@@ -49,14 +49,14 @@ class TestUserValidator():
 
     def test_fields_are_required(self,uv:UserValidator):
         user = {}
-        uv.is_user_valid(user)
+        uv.is_user_to_create_valid(user)
         actual = uv.get_errors()
         expected = {"username": "required field", "password": "required field"}
         assert expected == actual
 
     def test_fields_are_not_empty(self,uv:UserValidator):
         user = {'username': '', 'password': ''}
-        uv.is_user_valid(user)
+        uv.is_user_to_create_valid(user)
         actual_errors = uv.get_errors()
         expected_errors = {
             'username': 'empty values not allowed',
@@ -65,7 +65,7 @@ class TestUserValidator():
         assert expected_errors == actual_errors
 
     def test_password_is_wrong(self,uv:UserValidator):
-        uv.is_user_valid(
+        uv.is_user_to_create_valid(
             {'username': 'pepefrog', 'password': 'Hello_World'})
         actual_errors = uv.get_errors()
         expected_errors = {
@@ -74,20 +74,20 @@ class TestUserValidator():
 
     def test_get_error_messages_from_random_inputs(self,uv:UserValidator):
         # 1
-        uv.is_user_valid({'username': '', })
+        uv.is_user_to_create_valid({'username': '', })
         expected = {
             'username': 'empty values not allowed', 'password': 'required field'
         }
         actual = uv.get_errors()
         assert expected == actual
         # 2
-        uv.is_user_valid({'password': '', })
+        uv.is_user_to_create_valid({'password': '', })
         expected = {
             'password': 'empty values not allowed', 'username': 'required field'}
         actual = uv.get_errors()
         assert expected == actual
         # 3
-        uv.is_user_valid({'username': 'kkk', 'password': 'kas_as12'})
+        uv.is_user_to_create_valid({'username': 'kkk', 'password': 'kas_as12'})
         expected = {"password":
                     "Your password must contain at least:\n8 characters.\nOne uppercase letter.\nOne lowercase letter.\nOne number.\nOne special character like: @%+\/'!#$^?:.(){[]}~-_`"
                     }
@@ -95,4 +95,4 @@ class TestUserValidator():
         assert expected == actual
     
     def test_is_user_valid_using_an_empty_object(self,uv:UserValidator):
-        assert uv.is_user_valid(None) is False
+        assert uv.is_user_to_create_valid(None) is False
