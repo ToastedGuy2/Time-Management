@@ -8,9 +8,20 @@ export default function SignUp() {
   const classes = useStyles();
   return (
     <Box className={classes.box}>
-      <Container maxWidth="md" className={classes.container}>
-        <Grid container spacing={2}>
-          <Grid item md={6}>
+      <Container
+        maxWidth="xs"
+        className={classes.container}
+        sx={{ display: { md: "none" } }}
+      >
+        <Form />
+      </Container>
+      <Container
+        maxWidth="md"
+        className={classes.container}
+        sx={{ display: { xs: "none", md: "flex" } }}
+      >
+        <Grid container spacing={2} justifyContent={"center"}>
+          <Grid item md={6} sx={{ display: "flex", alignItems: "center" }}>
             <CustomerReviewSlider />
           </Grid>
           <Grid item md={6}>

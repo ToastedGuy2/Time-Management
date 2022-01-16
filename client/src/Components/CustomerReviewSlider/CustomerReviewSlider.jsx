@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import CustomerReview from "../CustomerReview/CustomerReview";
 import Sliders from "../Sliders/Sliders";
@@ -6,7 +6,15 @@ import useStyles from "./style";
 export default function CustomerReviewSlider() {
   const classes = useStyles();
   return (
-    <Box className={classes.box} sx={{ display: { xs: "none", md: "flex" } }}>
+    <Box className={classes.box}>
+      <Typography
+        variant="h5"
+        color="initial"
+        mb={2}
+        sx={{ fontFamily: "'Days One', sans-serif;" }}
+      >
+        What our users say
+      </Typography>
       <CustomerReview
         profileUrl={
           "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fnaibuzz.com%2Fwp-content%2Fuploads%2F2017%2F06%2FDave.jpeg&f=1&nofb=1"

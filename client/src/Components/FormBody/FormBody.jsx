@@ -2,7 +2,7 @@ import React from "react";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import FilledInput from "@mui/material/FilledInput";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
@@ -12,19 +12,19 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { Button, Typography } from "@mui/material";
 
-export default function FormBody({}) {
+export default function FormBody() {
   return (
     <form>
       <TextField
         id="usernameInput"
         label="Username"
-        variant="filled"
+        variant="outlined"
         fullWidth
         margin="normal"
       />
       <FormControl variant="outlined" fullWidth margin="normal">
         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-        <FilledInput
+        <OutlinedInput
           id="outlined-adornment-password"
           type={true ? "text" : "password"}
           value=""
@@ -44,11 +44,9 @@ export default function FormBody({}) {
           label="Password"
         />
       </FormControl>
-      {/* <FormGroup sx={{ m: "16px 0 16px 0px" }}> */}
       <FormGroup>
         <FormControlLabel
           control={<Checkbox defaultChecked />}
-          //   label="By signing up, you agree to the"
           label={
             <Typography variant="span" color="initial">
               By signing up, you agree to the{" "}
@@ -63,7 +61,12 @@ export default function FormBody({}) {
           }
         />
       </FormGroup>
-      <Button variant="contained" color="primary" fullWidth>
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        sx={{ marginTop: 1 }}
+      >
         Sign up
       </Button>
     </form>

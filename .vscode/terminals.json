@@ -3,6 +3,14 @@
     "autokill": true,
     "terminals": [{
             "icon": "eye",
+            "name": "Client",
+            "description": " application",
+            "commands": [
+                "cd client",
+                "npm start"
+            ]
+        }, {
+            "icon": "eye",
             "name": "Server",
             "description": " application",
             "commands": [

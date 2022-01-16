@@ -10,5 +10,8 @@
     "python.testing.pytestArgs": [
         "."
     ],
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "cSpell.words": [
+        "Pomotivity"
+    ]
 }

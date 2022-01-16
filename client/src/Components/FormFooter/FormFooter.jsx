@@ -3,7 +3,7 @@ import { Link, Typography } from "@mui/material";
 
 export default function FormFooter() {
   return (
-    <Typography variant="body2" color="initial" align="center" mb={1} mt={2}>
+    <Typography variant="body2" color="GrayText" align="center" mt={3}>
       Already have an account?{" "}
       <Link variant="body2" color="primary" underline="hover" href="#">
         Sign in
