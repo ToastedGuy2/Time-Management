@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import FormBody from "../FormBody/FormBody";
 import FormFooter from "../FormFooter/FormFooter";
 import FormHeader from "../FormHeader/FormHeader";
@@ -8,6 +8,8 @@ export default function Form() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -20,10 +22,30 @@ export default function Form() {
   const handleClickOnCheckbox = () => {
     setChecked(!checked);
   };
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+  const handleOnClickAcceptTerms = () => {
+    setChecked(true);
+    setShowModal(false);
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("Form Submitted");
   };
+  const ref = useRef(null);
+  useEffect(() => {
+    if (showModal) {
+      const { current: descriptionElement } = ref;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [showModal]);
   return (
     <div>
       <FormHeader title="Welcome" />
@@ -37,6 +59,11 @@ export default function Form() {
         checked={checked}
         handleClickOnCheckbox={handleClickOnCheckbox}
         handleSubmit={handleSubmit}
+        ref={ref}
+        showModal={showModal}
+        handleOpenModal={handleOpenModal}
+        handleCloseModal={handleCloseModal}
+        handleOnClickAcceptTerms={handleOnClickAcceptTerms}
       />
       <FormFooter />
     </div>
