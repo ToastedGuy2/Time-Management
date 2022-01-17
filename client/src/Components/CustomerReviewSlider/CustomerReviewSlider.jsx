@@ -22,7 +22,7 @@ const customers = [
   {
     id: 3,
     pictureUrl: "https://www.filepicker.io/api/file/TBHtUzkDTCykklB8apdG",
-    name: "maximilian schwarzmüller",
+    name: "Maximilian Schwarzmüller",
     comment:
       "Thanks guys, keep up the good work! I would be lost without Pomotivity. I couldn't have asked for more than this. I am really satisfied with my Pomotivity.",
   },
