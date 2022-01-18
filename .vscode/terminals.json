@@ -11,6 +11,13 @@
             ]
         }, {
             "icon": "eye",
+            "name": "NPM Client",
+            "description": " application",
+            "commands": [
+                "cd client"
+            ]
+        }, {
+            "icon": "eye",
             "name": "Server",
             "description": " application",
             "commands": [
