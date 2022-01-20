@@ -10,7 +10,16 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { Button, Typography } from "@mui/material";
+import { theme } from "../../theme";
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  CircularProgress,
+  Collapse,
+  Typography,
+} from "@mui/material";
 import {
   Dialog,
   DialogTitle,
@@ -18,6 +27,8 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import FormHelperText from "@mui/material/FormHelperText";
+
 import CheckIcon from "@mui/icons-material/Check";
 const FormBody = forwardRef(
   (
@@ -35,12 +46,25 @@ const FormBody = forwardRef(
       handleOpenModal,
       handleCloseModal,
       handleOnClickAcceptTerms,
+      usernameError,
+      passwordError,
+      checkboxError,
+      isRegisteringUser,
+      showAlert,
+      handleCloseAlert,
     },
     ref
   ) => {
     return (
       <div>
         <form onSubmit={handleSubmit}>
+          <Collapse in={showAlert}>
+            <Alert severity="error" variant="filled" onClose={handleCloseAlert}>
+              <AlertTitle>Error</AlertTitle>
+              OOPS something went wrong on our servers while processing your
+              request. Please try again
+            </Alert>
+          </Collapse>
           <TextField
             id="usernameInput"
             label="Username"
@@ -49,12 +73,22 @@ const FormBody = forwardRef(
             margin="normal"
             value={username}
             onChange={usernameInputOnChange}
+            helperText={usernameError.error ? usernameError.errorMessage : ""}
+            error={usernameError.error}
+            disabled={isRegisteringUser}
           />
-          <FormControl variant="outlined" fullWidth margin="normal">
+          <FormControl
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            error={passwordError.error}
+            disabled={isRegisteringUser}
+          >
             <InputLabel htmlFor="outlined-adornment-password">
               Password
             </InputLabel>
             <OutlinedInput
+              helperText={passwordError.error ? passwordError.errorMessage : ""}
               id="outlined-adornment-password"
               type={showPassword ? "text" : "password"}
               value={password}
@@ -72,40 +106,73 @@ const FormBody = forwardRef(
               }
               label="Password"
             />
+            <FormHelperText>
+              {passwordError.error
+                ? passwordError.errorMessage
+                : "MEMORIZE IT, since we have no account recovery method"}
+            </FormHelperText>
           </FormControl>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox checked={checked} onClick={handleClickOnCheckbox} />
-              }
-              label={
-                <>
-                  By signing up, you agree to the{" "}
-                  <Typography
-                    variant="span"
-                    color="primary"
-                    sx={{ fontWeight: 700 }}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      event.preventDefault();
-                      handleOpenModal();
+          <FormControl error={checkboxError.error} disabled={isRegisteringUser}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checked}
+                    onClick={handleClickOnCheckbox}
+                    className={true && "Hello"}
+                    sx={{
+                      color: checkboxError.error
+                        ? theme.palette.error.main
+                        : "fff",
                     }}
-                  >
-                    Terms of Service
-                  </Typography>
-                </>
-              }
-            />
-          </FormGroup>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ marginTop: 1 }}
-            type="submit"
-          >
-            Sign up
-          </Button>
+                  />
+                }
+                label={
+                  <>
+                    By signing up, you agree to the{" "}
+                    <Typography
+                      variant="span"
+                      color={isRegisteringUser ? "inherit" : "primary"}
+                      sx={{ fontWeight: 700 }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+                        handleOpenModal();
+                      }}
+                    >
+                      Terms of Service
+                    </Typography>
+                  </>
+                }
+              />
+              <FormHelperText>
+                {checkboxError.error ? checkboxError.errorMessage : ""}
+              </FormHelperText>
+            </FormGroup>
+          </FormControl>
+          <Box sx={{ marginTop: 1, position: "relative" }}>
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={isRegisteringUser}
+              fullWidth
+            >
+              Sign up
+            </Button>
+            {isRegisteringUser && (
+              <CircularProgress
+                size={24}
+                color="primary"
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-12px",
+                  marginLeft: "-12px",
+                }}
+              />
+            )}
+          </Box>
         </form>
         <Dialog
           open={showModal}
