@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, request
 from flask import Response
 from jwt import encode
@@ -17,6 +18,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 # TODO: TRY CATCH -> Document is Missing
+# Users
+
+
 @app.route("/api/users", methods=["POST"])
 def sign_up():
     try:
@@ -36,13 +40,15 @@ def sign_up():
         user_dict = user.asdict()
         user_dict['url'] = f"http://127.0.0.1:5000/api/users/{user_dict['id']}"
         user_dict['password'] = model['password']
-        return user_dict,201
+        return user_dict, 201
     except ValueError as e:
-        return {'message':"Please provide a json object"},400
+        return {'message': "Please provide a json object"}, 400
     except Exception as e:
-        return {'message':"Something went wrong while processing your request"},500
+        return {'message': "Something went wrong while processing your request"}, 500
 
 # TODO: TRY CATCH -> Document is Missing
+
+
 @app.route("/api/authentication", methods=["POST"])
 def login():
     try:
@@ -53,15 +59,25 @@ def login():
         repository = UserRepository()
         user = repository.get_by_username(model['username'])
         if user is None:
-            return {'message': "invalid data", 'errors': {'username':"there's no account registered with this username"}}, 400
+            return {'message': "invalid data", 'errors': {'username': "there's no account registered with this username"}}, 400
         password = model["password"]
-        if(Hasher().verify_password(password,user.password)):
-            payload = {'id':user.id,'username':user.username}
-            encoded = encode(payload,secret_key)
-            return Response(headers={'Authentication':f"Bearer {encoded}"})
+        if(Hasher().verify_password(password, user.password)):
+            payload = {'id': user.id, 'username': user.username}
+            encoded = encode(payload, secret_key)
+            return Response(headers={'Authentication': f"Bearer {encoded}"})
         else:
-            return {'message':"invalid password"},400
+            return {'message': "invalid password"}, 400
     except ValueError as e:
-        return {'message':"Please provide a json object"},400
+        return {'message': "Please provide a json object"}, 400
     except Exception as e:
-        return {'message':"Something went wrong while processing your request"},500
+        return {'message': "Something went wrong while processing your request"}, 500
+# Users
+
+
+@app.route("/api/users/<username>", methods=['GET'])
+def get_user_by_username(username):
+    user = UserRepository().get_by_username(username).asdict()
+    del user["password"]
+    if user is None:
+        return {"message": "The user you're looking for doesn't exist"}, 404
+    return {"data": user}, 200
