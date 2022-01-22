@@ -3,12 +3,17 @@ import FormBody from "../FormBody/FormBody";
 import FormFooter from "../FormFooter/FormFooter";
 import FormHeader from "../FormHeader/FormHeader";
 import axios from "../../axios";
+import { Typography } from "@mui/material";
+const get_user_by_username = (username) => axios.get(`/users/${username}`);
+const create_user = (username, password) =>
+  axios.post(`/users`, { username, password });
 export default function Form() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isDone, setIsDone] = useState(false);
   const [usernameError, setUsernameError] = useState({
     error: false,
     errorMessage: "This field is required",
@@ -60,6 +65,7 @@ export default function Form() {
   };
   const finishedRegisteringUser = () => {
     setIsRegisteringUser(false);
+    isDone();
   };
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -87,6 +93,26 @@ export default function Form() {
     }
   };
   const ref = useRef(null);
+  const insert_user = async () => {
+    try {
+      await get_user_by_username(username);
+      await create_user(username, password);
+      finishedRegisteringUser();
+      setIsDone(true);
+    } catch (error) {
+      const { data, status, headers } = error.response;
+      if (status === 404) {
+        setUsernameError({
+          error: true,
+          errorMessage: "Username already exist.",
+        });
+      }
+      if (status === 500) {
+        openAlert(true);
+      }
+      finishedRegisteringUser();
+    }
+  };
   useEffect(() => {
     if (showModal) {
       const { current: descriptionElement } = ref;
@@ -97,17 +123,21 @@ export default function Form() {
   }, [showModal]);
   useEffect(() => {
     if (isRegisteringUser) {
-      try {
-        await axios.get(`/users?username=${username}`);
-        await axios.post(`/users`, { username, password });
-      } catch (error) {}
+      insert_user();
     }
 
-    return () => {
-      second;
-    };
+    // return () => {
+    //   setIsRegisteringUser(false);
+    // };
   }, [isRegisteringUser]);
 
+  if (isDone) {
+    return (
+      <Typography variant="h1" color="initial">
+        Hello World
+      </Typography>
+    );
+  }
   return (
     <div>
       <FormHeader title="Welcome" />

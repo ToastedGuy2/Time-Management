@@ -2,6 +2,7 @@ from crypt import methods
 from flask import Flask, request
 from flask import Response
 from jwt import encode
+from flask_cors import CORS, cross_origin
 # FLASK
 from .utils.hasher import Hasher
 from .utils.validations.user.user_validator import UserValidator
@@ -13,8 +14,10 @@ from .repositories.user_repository import UserRepository
 # from models.User import User
 secret_key = "Trend5-Isolation-Lived"
 app = Flask(__name__)
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://toastedguy2:_Byakuran4@localhost/pomodoro'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['CORS_HEADERS'] = 'Content-Type'
 db.init_app(app)
 
 # TODO: TRY CATCH -> Document is Missing
@@ -22,6 +25,7 @@ db.init_app(app)
 
 
 @app.route("/api/users", methods=["POST"])
+@cross_origin()
 def sign_up():
     try:
         model = request.json
@@ -50,6 +54,7 @@ def sign_up():
 
 
 @app.route("/api/authentication", methods=["POST"])
+@cross_origin()
 def login():
     try:
         model = request.json
@@ -75,9 +80,10 @@ def login():
 
 
 @app.route("/api/users/<username>", methods=['GET'])
+@cross_origin()
 def get_user_by_username(username):
-    user = UserRepository().get_by_username(username).asdict()
-    del user["password"]
-    if user is None:
+    user = UserRepository().get_by_username(username)
+    if user is not None:
         return {"message": "The user you're looking for doesn't exist"}, 404
-    return {"data": user}, 200
+    del user["password"]
+    return {"data": user.asdict()}, 200
