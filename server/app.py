@@ -1,7 +1,7 @@
 from crypt import methods
 from flask import Flask, request
 from flask import Response
-from jwt import encode
+from jwt import JWT
 from flask_cors import CORS, cross_origin
 # FLASK
 from .utils.hasher import Hasher
@@ -68,7 +68,7 @@ def login():
         password = model["password"]
         if(Hasher().verify_password(password, user.password)):
             payload = {'id': user.id, 'username': user.username}
-            encoded = encode(payload, secret_key)
+            encoded = JWT().encode(payload, secret_key)
             return Response(headers={'Authentication': f"Bearer {encoded}"})
         else:
             return {'message': "invalid password"}, 400
