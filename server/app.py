@@ -24,6 +24,20 @@ db.init_app(app)
 # Users
 
 
+@app.route("/api/users/<username>", methods=['GET'])
+@cross_origin()
+def get_user_by_username(username):
+    try:
+        user = UserRepository().get_by_username(username)
+        if user is None:
+            return {"message": "The user you're looking for doesn't exist"}, 404
+        user = user.asdict()
+        del user['password']
+        return {"data": user}, 200
+    except Exception as e:
+        return {'message': "Something went wrong while processing your request"}, 500
+
+
 @app.route("/api/users", methods=["POST"])
 @cross_origin()
 def sign_up():
@@ -76,14 +90,3 @@ def login():
         return {'message': "Please provide a json object"}, 400
     except Exception as e:
         return {'message': "Something went wrong while processing your request"}, 500
-# Users
-
-
-@app.route("/api/users/<username>", methods=['GET'])
-@cross_origin()
-def get_user_by_username(username):
-    user = UserRepository().get_by_username(username)
-    if user is not None:
-        return {"message": "The user you're looking for doesn't exist"}, 404
-    del user["password"]
-    return {"data": user.asdict()}, 200

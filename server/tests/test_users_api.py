@@ -1,5 +1,6 @@
 from flask.testing import FlaskClient
 from unittest.mock import MagicMock, patch
+from itsdangerous import json
 from pytest import fixture
 from ..app import app
 from ..app import db
@@ -82,4 +83,32 @@ class TestUsersApi():
         response = client.post('/api/users', json=input)
         # Assert
         mock_user_validator.assert_called_once()
+        assert response.status_code == 500
+
+    def test_get_user_by_username_endpoint_so_it_returns_200_status_code(self, client: FlaskClient):
+        # Arrange
+        username = "toastedguy2"
+        input = {'password': '_Byakuran4', 'username': username}
+        client.post('/api/users', json=input)
+        # Act
+        response = client.get(f"/api/users/{username}")
+        # Assert
+        assert response.status_code == 200
+
+    def test_get_user_by_username_endpoint_so_it_returns_404_status_code(self, client: FlaskClient):
+        # Arrange
+        username = "toastedguy2"
+        # Act
+        response = client.get(f"/api/users/{username}")
+        # Assert
+        assert response.status_code == 404
+
+    @patch('server.app.UserRepository', side_effect=Exception())
+    def test_get_user_by_username_endpoint_so_it_returns_500_status_code(elf, mock_user_repository: MagicMock, client: FlaskClient):
+        # Arrange
+        username = "toastedguy2"
+        # Act
+        response = client.get(f"/api/users/{username}")
+        # Assert
+        mock_user_repository.assert_called_once()
         assert response.status_code == 500

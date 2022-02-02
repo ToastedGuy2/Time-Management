@@ -4,8 +4,12 @@ import FormFooter from "../FormFooter/FormFooter";
 import FormHeader from "../FormHeader/FormHeader";
 import axios from "../../axios";
 import { Typography } from "@mui/material";
-const get_user_by_username = (username) => axios.get(`/users/${username}`);
-const create_user = (username, password) =>
+const does_user_exist = (username) =>
+  axios
+    .get(`/users/${username}`)
+    .then((user) => true)
+    .catch((error) => false);
+const post_user = (username, password) =>
   axios.post(`/users`, { username, password });
 export default function Form() {
   const [username, setUsername] = useState("");
@@ -63,10 +67,6 @@ export default function Form() {
   const startRegisteringUser = () => {
     setIsRegisteringUser(true);
   };
-  const finishedRegisteringUser = () => {
-    setIsRegisteringUser(false);
-    isDone();
-  };
   const handleSubmit = (event) => {
     event.preventDefault();
     let isFormOkay = true;
@@ -93,24 +93,22 @@ export default function Form() {
     }
   };
   const ref = useRef(null);
-  const insert_user = async () => {
+  const register_user = async () => {
     try {
-      await get_user_by_username(username);
-      await create_user(username, password);
-      finishedRegisteringUser();
-      setIsDone(true);
-    } catch (error) {
-      const { data, status, headers } = error.response;
-      if (status === 404) {
+      if (await !does_user_exist(username)) {
         setUsernameError({
           error: true,
           errorMessage: "Username already exist.",
         });
       }
+      await post_user(username, password);
+      setIsRegisteringUser(false);
+      setIsDone(true);
+    } catch (error) {
+      const { data, status, headers } = error.response;
       if (status === 500) {
         openAlert(true);
       }
-      finishedRegisteringUser();
     }
   };
   useEffect(() => {
@@ -123,7 +121,7 @@ export default function Form() {
   }, [showModal]);
   useEffect(() => {
     if (isRegisteringUser) {
-      insert_user();
+      register_user();
     }
 
     // return () => {
